@@ -21,3 +21,6 @@ Run the tests in debug to see the failing security test.
 
 * JDK 1.7+
 * A Java IDE
+
+## Resources
+[Spring Security](http://projects.spring.io/spring-security/#quick-start)
