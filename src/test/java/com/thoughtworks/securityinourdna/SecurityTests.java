@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -22,28 +20,7 @@ import static org.junit.Assert.assertThat;
 @WebIntegrationTest()
 public class SecurityTests {
     @Test
-    public void unauthorizedUsers_shouldNot_beAbleToDeleteAVendor() throws IOException {
-        // Given
-        URL deleteAVendorURL = new URL("http://localhost:8080/vendor/delete/vendor");
-
-        // When
-        String responsePage = getResponsePage(makeRequest(deleteAVendorURL, "POST"));
-
-        // Then
-        assertThat(responsePage, containsString("You do not have permission to do this"));
-    }
-
-    private String getResponsePage(HttpURLConnection connection) throws IOException {
-        StringWriter writer = new StringWriter();
-
-        IOUtils.copy(connection.getInputStream(), writer, "UTF-8");
-
-        return writer.toString();
-    }
-
-
-    @Test
-    public void unauthorizedUsers_shouldNotBeAbleToDeleteAVendor() throws IOException, InterruptedException {
+    public void shouldHaveCSRFProtection() throws IOException, InterruptedException {
         // Given
         URL userDeletionUrl = new URL("http://localhost:8080/vendor/delete/admin");
 
@@ -52,7 +29,6 @@ public class SecurityTests {
 
         // Then
         int httpStatusCodeForbidden = 403;
-//        there is httpurlconnection.http_forbidden
         assertThat(status, is(httpStatusCodeForbidden));
     }
 
