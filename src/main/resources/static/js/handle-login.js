@@ -2,19 +2,23 @@ $(function() {
     $('form').submit(function(e) {
         e.preventDefault();
 
-        var vendor = $('[name=vendor]');
+        var username = $('[name=username]');
         var password = $('[name=password]');
 
         var loginData = {
-            vendor: vendor.val(),
+            username: username.val(),
             password : password.val()
         };
 
         $.post("/session", loginData, function(result) {
-            alert(result);
+            if (result.contains("Sorry")){
+                alert(result);
+            } else {
+                window.location = window.location.href.split("/")[0] + result;
+            }
         });
 
-        vendor.val("");
+        username.val("");
         password.val('');
     });
 });

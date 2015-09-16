@@ -2,11 +2,25 @@
 
 ## Getting started
 
-Run the application and trigger the CSRF vulnerability
+Run the application and trigger the CSRF vulnerability.
 
+1. Start the application.
 ```bash
 ./gradlew clean bootRun
 ```
+
+2. Go to localhost:8080 and login as admin with the username/password:
+admin/admin
+
+3. Edit the evil.html in the main project directory to trigger the malicious CSRF attack.
+
+4. Start a simple http server in the main project directory to start your attack (Note: make sure you have both the Vendor Portal on port 8080 and this server running on 8000):
+
+ ```bash
+ python -mhttp.server
+ ```
+
+5. Open the localhost:8000/evil.html in a browser window and trigger the attack.
 
 ## Fixing CSRF
 

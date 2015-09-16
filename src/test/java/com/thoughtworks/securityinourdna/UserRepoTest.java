@@ -41,23 +41,20 @@ public class UserRepoTest {
         repo.addName("Alice", "password");
 
         // When
-        Boolean loggedIn = repo.login("Alice", "password");
+        String username = repo.login("Alice", "password");
 
         // Then
-        assertTrue(loggedIn);
+        assertThat(username, is("Alice"));
     }
 
-    @Test
+    @Test (expected = InvalidCredentials.class)
     public void login_should_deny_non_existing_user() throws Exception {
         // Given
         UserRepo repo = new UserRepo(conn);
         repo.addName("Alice", "password");
 
         // When
-        Boolean loggedIn = repo.login("nobody", "password");
-
-        // Then
-        assertFalse(loggedIn);
+        repo.login("nobody", "password");
     }
 
     private int getUserCount(Connection conn) throws Exception {

@@ -21,12 +21,17 @@ public class UserRepo {
         stmt.execute();
     }
 
-    public boolean login(String vendorName, String password) throws SQLException {
-        final String query = "select * from users where username = '" + vendorName + "' and password = '" + password + "'";
+    public String login(String username, String password) {
+        final String query = "select * from users where username = '" + username + "' and password = '" + password + "'";
 
-        final ResultSet resultSet = connection.createStatement().executeQuery(query);
-
-        return resultSet.next();
+        final ResultSet resultSet;
+        try {
+            resultSet = connection.createStatement().executeQuery(query);
+            resultSet.next();
+            return resultSet.getString("username");
+        } catch (SQLException e) {
+            throw new InvalidCredentials();
+        }
     }
 
     public void delete(String name) throws SQLException {
