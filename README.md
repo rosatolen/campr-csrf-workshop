@@ -34,7 +34,9 @@ Run the tests in debug to see the failing security test in detail.
 ./gradlew clean test --debug
 ```
 
-Now use your wits to get the test to pass!
+It will take more than an hour to properly implement CSRF protection, but the first step is to get the application to return a 403 forbidden action.
+
+Now use your wits to get the first test to pass! After the session, go ahead and look into what it would take to properly configure protection for your web application and look into what tools are provided to help you against CSRF in your tech stack.
 
 ## Requirements
 
@@ -43,3 +45,4 @@ Now use your wits to get the test to pass!
 
 ## Resources
 [Spring Security](http://projects.spring.io/spring-security/#quick-start)
+[OWASP CSRF Prevention Cheat Sheet](https://www.owasp.org/index.php/CSRF_Prevention_Cheat_Sheet)
