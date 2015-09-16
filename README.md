@@ -1,6 +1,6 @@
 # Campr Injection Workshop
 
-## Getting started
+## Triggering the CSRF Vulnerability
 
 Run the application and trigger the CSRF vulnerability.
 
