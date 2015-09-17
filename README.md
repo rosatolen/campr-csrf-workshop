@@ -16,8 +16,14 @@ admin/admin
 
 4. Start a simple http server in the main project directory to start your attack (Note: make sure you have both the Vendor Portal on port 8080 and this server running on 8000):
 
+If you have python 3, use:
  ```bash
  python -mhttp.server
+ ```
+
+If you have python 2, use:
+ ```bash
+ python -m SimpleHTTPServer
  ```
 
 5. Open the localhost:8000/evil.html in a browser window and trigger the attack.
