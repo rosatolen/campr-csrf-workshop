@@ -11,19 +11,24 @@
         body {
             padding: 10px;
             background-color: #eee;
-            max-width: 300px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h3>Delete a vendor:</h3>
-        <span id="status"></span>
-        <form>
-            <input type="text" name="vendor" placeholder="Vendor Name">
-            <button class="btn btn-primary" type="submit">Delete</button>
-        </form>
-        <button id="logout" class="btn btn-primary">Logout</button>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <h4>Delete a Vendor</h4>
+            </div>
+            <button id="logout" class="col-md-1 btn btn-primary">Logout</button>
+        </div>
+        <div class="row">
+            <span id="status"></span>
+            <form class="col-md-4">
+                <input type="text" name="vendor" placeholder="Vendor Name">
+                <button class="btn btn-primary" type="submit">Delete</button>
+            </form>
+        </div>
     </div>
 
 </body>
