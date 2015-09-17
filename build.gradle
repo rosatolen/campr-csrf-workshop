@@ -30,6 +30,7 @@ dependencies {
     }
     compile("org.springframework.boot:spring-boot-starter-jetty:${versions.springBootVersion}")
     compile("org.springframework.boot:spring-boot-starter-actuator:${versions.springBootVersion}")
+    compile("commons-io:commons-io:2.4")
 
     compile "org.apache.derby:derby:10.11.1.1"
 
