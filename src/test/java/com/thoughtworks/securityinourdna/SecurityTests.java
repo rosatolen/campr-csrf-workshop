@@ -1,21 +1,16 @@
 package com.thoughtworks.securityinourdna;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Form;
-import javax.ws.rs.core.NewCookie;
-import javax.ws.rs.core.Response;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -24,78 +19,84 @@ import static org.junit.Assert.assertThat;
 @SpringApplicationConfiguration(classes = VendorPortalApplication.class)
 @WebIntegrationTest()
 public class SecurityTests {
-    private final int HTTP_FORBIDDEN = 403;
+    private final int HTTP_UNAUTHORIZED = 401;
+    private final int HTTP_BAD_REQUEST = 400;
     private final int HTTP_OK = 200;
 
     @Test
     public void admin_should_delete_user_with_csrf_token() throws Exception {
         // Given
-        Map<String, NewCookie> sessionCookies = fetchSessionCookies();
+        final BasicCookieStore cookieStore = new BasicCookieStore();
+        loginAsAdmin(cookieStore);
 
-        String sessionCookieValue = sessionCookies.get("JSESSIONID").getValue();
-        String csrfCookieValue = sessionCookies.get("csrf-token").getValue();
+        String csrfToken = null;
+        for (Cookie c : cookieStore.getCookies()) {
+            if (c.getName().equals("csrfToken")) {
+                csrfToken = c.getValue();
+                break;
+            }
+        }
 
         // When
-        Response deletionResponse = postToDeleteVendor(sessionCookieValue, Optional.of(csrfCookieValue));
+        int status = postToDeleteVendor(cookieStore, csrfToken);
 
         // Then
-        int status = deletionResponse.getStatus();
         assertThat(status, is(HTTP_OK));
     }
 
     @Test
     public void admin_cannot_delete_user_without_csrf_token() throws Exception {
         // Given
-        Map<String, NewCookie> sessionCookies = fetchSessionCookies();
-        String sessionCookieValue = sessionCookies.get("JSESSIONID").getValue();
+        final BasicCookieStore cookieStore = new BasicCookieStore();
+
+        loginAsAdmin(cookieStore);
 
         // When
-        Response deletionResponse = postToDeleteVendor(sessionCookieValue, Optional.empty());
+        int status = postToDeleteVendor(cookieStore, null);
 
         // Then
-        int status = deletionResponse.getStatus();
-        assertThat(status, is(HTTP_FORBIDDEN));
+        assertThat(status, is(HTTP_BAD_REQUEST));
     }
 
     @Test
     public void admin_cannot_delete_user_with_incorrect_csrf_token() throws Exception {
         // Given
-        Map<String, NewCookie> sessionCookies = fetchSessionCookies();
-        String sessionCookieValue = sessionCookies.get("JSESSIONID").getValue();
+        BasicCookieStore cookieStore = new BasicCookieStore();
+        loginAsAdmin(cookieStore);
 
         // When
-        Response deletionResponse = postToDeleteVendor(sessionCookieValue, Optional.of("incorrect!"));
+        int status = postToDeleteVendor(cookieStore, "incorrect!");
 
         // Then
-        int status = deletionResponse.getStatus();
-        assertThat(status, is(HTTP_FORBIDDEN));
+        assertThat(status, is(HTTP_UNAUTHORIZED));
     }
 
 
-    private Map<String, NewCookie> fetchSessionCookies() throws URISyntaxException {
-        Client client = ClientBuilder.newClient();
-        URI loginUrl = new URI("http://localhost:8080/session");
-        Form form = new Form();
-        form.param("username", "admin");
-        form.param("password", "admin");
-        return client.target(loginUrl)
-                .request()
-                .post(Entity.form(form))
-                .getCookies();
+    private void loginAsAdmin(BasicCookieStore cookieStore) throws Exception {
+        CloseableHttpClient httpclient = HttpClients.custom()
+                .setDefaultCookieStore(cookieStore)
+                .build();
+
+        RequestBuilder request = RequestBuilder.post("http://localhost:8080/session")
+                .addParameter("username", "admin")
+                .addParameter("password", "admin");
+
+        httpclient.execute(request.build());
     }
 
-    private Response postToDeleteVendor(String sessionCookieValue, Optional<String> csrfCookieValue) throws URISyntaxException {
-        Client client = ClientBuilder.newClient();
-        URI userDeletionUrl = new URI("http://localhost:8080/vendor/delete/Recycling");
+    private int postToDeleteVendor(BasicCookieStore cookieStore, String maybeCsrfCookieValue) throws Exception {
+        CloseableHttpClient httpclient = HttpClients.custom()
+                .setDefaultCookieStore(cookieStore)
+                .build();
 
-        Form deletionFormParameters = new Form();
-        if (csrfCookieValue.isPresent()) {
-            deletionFormParameters.param("csrf-token", csrfCookieValue.get());
+        RequestBuilder request = RequestBuilder.post("http://localhost:8080/vendor/delete/Recycling");
+
+        if (maybeCsrfCookieValue != null) {
+            request.addParameter("csrfToken", maybeCsrfCookieValue);
         }
 
-        return client.target(userDeletionUrl)
-                .request()
-                .cookie("JSESSIONID", sessionCookieValue)
-                .post(Entity.form(deletionFormParameters));
+        final CloseableHttpResponse response = httpclient.execute(request.build());
+
+        return response.getStatusLine().getStatusCode();
     }
 }

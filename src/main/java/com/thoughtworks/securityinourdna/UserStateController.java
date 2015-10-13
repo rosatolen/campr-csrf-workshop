@@ -34,7 +34,7 @@ public class UserStateController {
         session.setAttribute("userState", userState);
 
         if (loggedIn) {
-            response.addCookie(new Cookie("csrf-token", generateCSRFToken()));
+            response.addCookie(new Cookie("csrfToken", generateCSRFToken()));
             return "admin.html";
         } else {
             return "Sorry! There is something wrong with your username and password combination.";
