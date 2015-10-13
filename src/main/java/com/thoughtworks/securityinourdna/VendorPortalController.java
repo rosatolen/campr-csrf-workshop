@@ -3,7 +3,6 @@ package com.thoughtworks.securityinourdna;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
@@ -23,7 +22,7 @@ public class VendorPortalController {
                                @RequestParam String csrfToken,
                                HttpServletRequest request,
                                HttpSession session) throws SQLException {
-        if (loggedIn(session) && csrfTokenCorrect(csrfToken, request.getCookies())) {
+        if (loggedIn(session)) {
             userRepo.delete(name);
             return name;
         }
@@ -35,38 +34,4 @@ public class VendorPortalController {
         final UserState userState = (UserState) session.getAttribute("userState");
         return userState != null && userState.isLoggedIn();
     }
-
-    private boolean csrfTokenCorrect(String csrfToken, Cookie[] cookies) {
-        String csrfTokenFromCookie = null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("csrfToken")) {
-                csrfTokenFromCookie = cookie.getValue();
-            }
-        }
-
-        if (csrfTokenFromCookie == null) {
-            return false;
-        } else {
-            return constantTimeEquals(csrfTokenFromCookie, csrfToken);
-        }
-    }
-
-    /*
-     * http://codahale.com/a-lesson-in-timing-attacks/
-     */
-    private boolean constantTimeEquals(String a, String b) {
-        byte[] byteArrayA = a.getBytes();
-        byte[] byteArrayB = b.getBytes();
-        
-        if (byteArrayA.length != byteArrayB.length) {
-            return false;
-        }
-
-        int result = 0;
-        for (int i = 0; i < byteArrayA.length; i++) {
-            result |= byteArrayA[i] ^ byteArrayB[i];
-        }
-        return result == 0;
-    }
-
 }
