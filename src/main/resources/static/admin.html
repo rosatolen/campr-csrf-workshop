@@ -7,18 +7,29 @@
     <script type="text/javascript" src="/js/jquery-2.1.3.js"></script>
     <script type="text/javascript" src="/js/delete.js"></script>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <style type "text/css">
+        body {
+            padding: 10px;
+            background-color: #eee;
+        }
+    </style>
 </head>
 <body>
-
-<button id="logout" class="btn btn-lg btn-primary btn-block">Logout</button>
-
-<h2>Delete a vendor:</h2>
-<span id="status"></span>
-<br/>
-<form>
-    <input class="form-control" type="text" name="vendor" placeholder="Vendor Name">
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Delete</button>
-</form>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <h4>Delete a Vendor</h4>
+            </div>
+            <button id="logout" class="col-md-1 btn btn-primary">Logout</button>
+        </div>
+        <div class="row">
+            <span id="status"></span>
+            <form class="col-md-4">
+                <input type="text" name="vendor" placeholder="Vendor Name">
+                <button class="btn btn-primary" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
 
 </body>
 </html>

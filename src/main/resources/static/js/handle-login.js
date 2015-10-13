@@ -11,7 +11,7 @@ $(function() {
         };
 
         $.post("/session", loginData, function(result) {
-            if (result.contains("Sorry")){
+            if (result.indexOf("Sorry") > -1) {
                 alert(result);
             } else {
                 window.location = window.location.href.split("/")[0] + result;
