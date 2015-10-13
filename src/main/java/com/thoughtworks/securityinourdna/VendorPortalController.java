@@ -23,7 +23,7 @@ public class VendorPortalController {
                                @RequestParam String csrfToken,
                                HttpServletRequest request,
                                HttpSession session) throws SQLException {
-        if (loggedIn(session) && csrfTokenCorrect(csrfToken, request)) {
+        if (loggedIn(session) && csrfTokenCorrect(csrfToken, request.getCookies())) {
             userRepo.delete(name);
             return name;
         }
@@ -36,9 +36,9 @@ public class VendorPortalController {
         return userState != null && userState.isLoggedIn();
     }
 
-    private boolean csrfTokenCorrect(String csrfToken, HttpServletRequest request) {
+    private boolean csrfTokenCorrect(String csrfToken, Cookie[] cookies) {
         String csrfTokenFromCookie = null;
-        for (Cookie cookie : request.getCookies()) {
+        for (Cookie cookie : cookies) {
             if (cookie.getName().equals("csrfToken")) {
                 csrfTokenFromCookie = cookie.getValue();
             }
@@ -47,8 +47,26 @@ public class VendorPortalController {
         if (csrfTokenFromCookie == null) {
             return false;
         } else {
-            return csrfTokenFromCookie.equals(csrfToken);
+            return constantTimeEquals(csrfTokenFromCookie, csrfToken);
         }
+    }
+
+    /*
+     * http://codahale.com/a-lesson-in-timing-attacks/
+     */
+    private boolean constantTimeEquals(String a, String b) {
+        byte[] byteArrayA = a.getBytes();
+        byte[] byteArrayB = b.getBytes();
+        
+        if (byteArrayA.length != byteArrayB.length) {
+            return false;
+        }
+
+        int result = 0;
+        for (int i = 0; i < byteArrayA.length; i++) {
+            result |= byteArrayA[i] ^ byteArrayB[i];
+        }
+        return result == 0;
     }
 
 }
