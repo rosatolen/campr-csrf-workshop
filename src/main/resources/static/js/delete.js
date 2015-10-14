@@ -2,11 +2,14 @@ $(function() {
     $('form').submit(function(e) {
         e.preventDefault();
 
-        var vendor = $('[name=vendor]').val();
+        var vendor = $('[name=vendor]');
 
-        $.post("/vendor/delete/" + vendor, function(result) {
-            if (!result.contains("permission")) {
-                alert("You have deleted the vendor " + vendor);
+        var url = "/vendor/delete/" + vendor.val();
+        var csrfData = { csrfToken: getCsrfTokenFromCookie() };
+
+        $.post(url, csrfData, function(result) {
+            if (!result.indexOf("permission") > -1) {
+                alert("You have deleted the vendor " + vendor.val());
             } else {
                 $("#status").text(result);
             }
@@ -21,5 +24,14 @@ $(function() {
         $.post("/service/logout", function(){
             window.location = window.location.href.split("/")[0] + "/index.html";
         });
-    })
+    });
+
+    function getCsrfTokenFromCookie() {
+        var cookies = {};
+        document.cookie.split(';').forEach(function(cookie) {
+            var keyAndValue = cookie.trim().split('=');
+            cookies[keyAndValue[0]] = keyAndValue[1];
+        });
+        return cookies['csrfToken'];
+    }
 });
