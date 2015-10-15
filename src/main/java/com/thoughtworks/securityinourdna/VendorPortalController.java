@@ -24,7 +24,8 @@ public class VendorPortalController {
                                // TODO: Do something with these... but first, features!
                                @RequestParam(value = "csrfToken", required = false)
                                String csrfToken,
-                               HttpServletRequest request) throws SQLException {
+                               @CookieValue(value = "csrfToken", required = false)
+                               String csrfTokenFromCookie) throws SQLException {
         if (loggedIn(session)) {
             userRepo.delete(name);
             return name;
