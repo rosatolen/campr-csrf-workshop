@@ -19,10 +19,13 @@ public class VendorPortalController {
     }
 
     @RequestMapping(value = "/vendor/delete/{name}", method = RequestMethod.POST)
-    public String deleteVendor(@PathVariable String name,
-                               @RequestParam String csrfToken,
-                               HttpServletRequest request,
-                               HttpSession session) throws SQLException {
+    public String deleteVendor(@PathVariable(value = "name")
+                               String name,
+                               HttpSession session,
+                               // TODO: Do something with these... but first, features!
+                               @RequestParam(value = "csrfToken", required = false)
+                               String csrfToken,
+                               HttpServletRequest request) throws SQLException {
         if (loggedIn(session) && csrfTokenCorrect(csrfToken, request.getCookies())) {
             userRepo.delete(name);
             return name;
