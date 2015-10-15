@@ -45,20 +45,6 @@ public class SecurityTests {
     }
 
     @Test
-    public void admin_cannot_delete_user_without_csrf_token() throws Exception {
-        // Given
-        final BasicCookieStore cookieStore = new BasicCookieStore();
-
-        loginAsAdmin(cookieStore);
-
-        // When
-        int status = postToDeleteVendor(cookieStore, null);
-
-        // Then
-        assertThat(status, is(HTTP_BAD_REQUEST));
-    }
-
-    @Test
     public void admin_cannot_delete_user_with_incorrect_csrf_token() throws Exception {
         // Given
         BasicCookieStore cookieStore = new BasicCookieStore();
