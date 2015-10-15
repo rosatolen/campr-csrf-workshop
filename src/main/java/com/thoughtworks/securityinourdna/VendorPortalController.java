@@ -25,8 +25,9 @@ public class VendorPortalController {
                                // TODO: Do something with these... but first, features!
                                @RequestParam(value = "csrfToken", required = false)
                                String csrfToken,
-                               HttpServletRequest request) throws SQLException {
-        if (loggedIn(session) && csrfTokenCorrect(csrfToken, request.getCookies())) {
+                               @CookieValue(value = "csrfToken", required = false)
+                               String csrfTokenFromCookie) throws SQLException {
+        if (loggedIn(session) && csrfTokenCorrect(csrfToken, csrfTokenFromCookie)) {
             userRepo.delete(name);
             return name;
         }
@@ -39,14 +40,7 @@ public class VendorPortalController {
         return userState != null && userState.isLoggedIn();
     }
 
-    private boolean csrfTokenCorrect(String csrfToken, Cookie[] cookies) {
-        String csrfTokenFromCookie = null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("csrfToken")) {
-                csrfTokenFromCookie = cookie.getValue();
-            }
-        }
-
+    private boolean csrfTokenCorrect(String csrfToken, String csrfTokenFromCookie) {
         if (csrfTokenFromCookie == null) {
             return false;
         } else {
@@ -60,15 +54,16 @@ public class VendorPortalController {
     private boolean constantTimeEquals(String a, String b) {
         byte[] byteArrayA = a.getBytes();
         byte[] byteArrayB = b.getBytes();
-        
+
         if (byteArrayA.length != byteArrayB.length) {
             return false;
         }
 
         int result = 0;
         for (int i = 0; i < byteArrayA.length; i++) {
-            result |= byteArrayA[i] ^ byteArrayB[i];
+            result |= byteArrayA[i] ^  byteArrayB[i];
         }
+
         return result == 0;
     }
 
