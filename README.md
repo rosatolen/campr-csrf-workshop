@@ -13,13 +13,9 @@ Run the application and trigger the CSRF vulnerability.
 2. Go to localhost:8080 and login as admin with the username/password:
    admin/admin
 
-3. Edit the evil.html in the main project directory to trigger the malicious
-   CSRF attack.
+3. Open evil.html in a web browser and click the button
 
-4. Open evil.html in a web browser
-
-5. Open the localhost:8000/evil.html in a browser window and trigger the
-   attack.
+4. Log out of the vendor portal, then try to log back in as admin
 
 ## Fixing CSRF
 
@@ -35,10 +31,7 @@ Run the tests in debug to see the failing security test in detail.
 ./gradlew clean test --debug
 ```
 
-Now use your wits to get the first test to pass! After the session, go ahead
-and look into what it would take to properly configure protection for your web
-application and look into what tools are provided to help you against CSRF in
-your tech stack.
+Now use your wits to get the first test to pass!
 
 ## Requirements
 
