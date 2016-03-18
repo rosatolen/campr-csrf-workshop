@@ -29,7 +29,7 @@ $(function() {
     function getCsrfTokenFromCookie() {
         var cookies = {};
         document.cookie.split(';').forEach(function(cookie) {
-            var keyAndValue = cookie.trim().split('=');
+            var keyAndValue = cookie.trim().split(/=(.+)?/);
             cookies[keyAndValue[0]] = keyAndValue[1];
         });
         return cookies['csrfToken'];
