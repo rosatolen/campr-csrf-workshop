@@ -1,4 +1,4 @@
-# Campr Injection Workshop
+# Campr CSRF Workshop
 
 ## Triggering the CSRF Vulnerability
 
