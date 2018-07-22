@@ -8,16 +8,15 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = VendorPortalApplication.class)
-@WebIntegrationTest()
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = VendorPortalApplication.class, webEnvironment=DEFINED_PORT)
 public class SecurityTests {
     private final int HTTP_UNAUTHORIZED = 401;
     private final int HTTP_BAD_REQUEST = 400;

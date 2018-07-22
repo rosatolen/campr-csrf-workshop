@@ -7,7 +7,7 @@ Run the application and trigger the CSRF vulnerability.
 1. Start the application.
 
   ```bash
-  ./gradlew clean run
+  ./gradlew clean bootRun
   ```
 
 2. Go to localhost:8080 and login as admin with the username/password:
